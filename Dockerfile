@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:18-alpine3.16 AS deps
+FROM node:18-alpine3.17 AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk update \
     && apk add --no-cache libc6-compat openssl1.1-compat
@@ -11,7 +11,7 @@ RUN yarn config set network-timeout 300000
 RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM node:18-alpine3.16 AS builder
+FROM node:18-alpine3.17 AS builder
 RUN apk update \
     && apk add --no-cache libc6-compat openssl1.1-compat
 WORKDIR /app
@@ -30,7 +30,7 @@ ENV NEXT_TELEMETRY_DISABLED=0
 RUN yarn build-docker
 
 # Production image, copy all the files and run next
-FROM node:18-alpine3.16 AS runner
+FROM node:18-alpine3.17 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
